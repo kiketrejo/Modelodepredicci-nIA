@@ -1,0 +1,48 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+# 1. Crear un conjunto de datos de ejemplo
+data = {
+    'Edad': [25, 34, 28, 45, 50, 23, 37, 31, 60, 48],
+    'Ingresos': [30000, 50000, 32000, 75000, 80000, 25000, 52000, 47000, 90000, 68000],
+    'Compras_previas': [2, 5, 3, 8, 10, 1, 6, 4, 12, 9],
+    'Compra_producto': [0, 1, 0, 1, 1, 0, 1, 1, 1, 1]  # 1: Compra, 0: No compra
+}
+
+df = pd.DataFrame(data)
+
+
+X = df[['Edad', 'Ingresos', 'Compras_previas']]
+y = df['Compra_producto']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+
+model = RandomForestClassifier(random_state=42)
+model.fit(X_train, y_train)
+
+
+y_pred = model.predict(X_test)
+print("Exactitud del modelo:", accuracy_score(y_test, y_pred))
+
+
+print("\nPrueba el modelo con tus propios datos.")
+edad = int(input("Ingresa la edad del cliente: "))
+ingresos = float(input("Ingresa los ingresos del cliente (en dólares): "))
+compras_previas = int(input("Ingresa el número de compras previas del cliente: "))
+
+
+usuario_datos = pd.DataFrame({
+    'Edad': [edad],
+    'Ingresos': [ingresos],
+    'Compras_previas': [compras_previas]
+})
+
+
+prediccion = model.predict(usuario_datos)
+resultado = "Compra el producto" if prediccion[0] == 1 else "No compra el producto"
+print("Resultado de la predicción:", resultado)
+
+
+
